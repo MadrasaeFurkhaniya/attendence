@@ -1,15 +1,53 @@
 function login() {
-const u = username.value;
-const p = password.value;
-const users = JSON.parse(localStorage.getItem('users'));
-const user = users.find(x => x.username===u && x.password===p);
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value.trim();
 
+  if (!u || !p) {
+    alert("Please enter username and password");
+    return;
+  }
 
-if (!user) return alert('Invalid login');
-localStorage.setItem('currentUser', JSON.stringify(user));
+  fetch("https://script.google.com/macros/s/AKfycbyVFubNl6Ak38pQ9Q3YSdcNkwb6q01d2WcQJyFPQv1XDE0yqh3RqXEQ-meL20mvsq7Mog/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      action: "login",
+      username: u,
+      password: p
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      alert(data.message || "Invalid login");
+      return;
+    }
 
+    // save logged-in user
+    localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-if (user.role==='admin') location.href='admin.html';
-if (user.role==='operator') location.href='operator.html';
-if (user.role==='parent') location.href='parent.html';
+    // role based redirect
+    switch (data.user.role.toLowerCase()) {
+      case "admin":
+        location.href = "admin.html";
+        break;
+
+      case "operator":
+        location.href = "operator.html";
+        break;
+
+      case "parent":
+        location.href = "parent.html";
+        break;
+
+      default:
+        alert("Role not allowed");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Server error");
+  });
 }

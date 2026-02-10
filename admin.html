@@ -10,19 +10,13 @@
 
 <style>
 body { padding-bottom: 70px; }
-.img-thumb {
-  width: 42px;
-  height: 42px;
-  object-fit: cover;
-  cursor: pointer;
-}
-.action-btns button { margin:2px; }
+.img-thumb { width:42px;height:42px;object-fit:cover;cursor:pointer }
+.action-btns button { margin:2px }
 </style>
 </head>
 
 <body class="bg-light">
 
-<!-- HEADER -->
 <nav class="navbar bg-white shadow-sm px-3 d-flex justify-content-between">
   <strong>My School</strong>
   <span>Admin</span>
@@ -30,25 +24,15 @@ body { padding-bottom: 70px; }
 
 <div class="container mt-3">
 
-<!-- DESKTOP TABS -->
 <ul class="nav nav-tabs d-none d-md-flex">
-  <li class="nav-item">
-    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabStudents">Students</button>
-  </li>
-  <li class="nav-item">
-    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAdd">Add / Edit</button>
-  </li>
-  <li class="nav-item">
-    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabReset">Reset Password</button>
-  </li>
-  <li class="nav-item">
-  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAttendance">Attendance</button>
-</li>
+  <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabStudents">Students</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAdd">Add / Edit</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAttendance">Attendance</button></li>
 </ul>
 
 <div class="tab-content mt-3">
 
-<!-- ================= STUDENTS TAB ================= -->
+<!-- ================= STUDENTS ================= -->
 <div class="tab-pane fade show active" id="tabStudents">
 
 <div class="row g-2 mb-2">
@@ -57,10 +41,8 @@ body { padding-bottom: 70px; }
       <option value="all">All Status</option>
       <option value="active">Active</option>
       <option value="suspended">Suspended</option>
-      <option value="deleted">Deleted</option>
     </select>
   </div>
-
   <div class="col-md-3">
     <select id="roleFilter" class="form-select" onchange="renderStudents()">
       <option value="all">All Roles</option>
@@ -68,15 +50,7 @@ body { padding-bottom: 70px; }
       <option value="operator">Operator</option>
     </select>
   </div>
-
-  <div class="col-md-3">
-    <select id="searchType" class="form-select">
-      <option value="student">Student Name</option>
-      <option value="parent">Parent Username</option>
-    </select>
-  </div>
-
-  <div class="col-md-3">
+  <div class="col-md-6">
     <input id="searchTxt" class="form-control" placeholder="Search..." onkeyup="renderStudents()">
   </div>
 </div>
@@ -85,12 +59,7 @@ body { padding-bottom: 70px; }
 <table class="table table-bordered table-sm align-middle">
 <thead class="table-light">
 <tr>
-  <th>Photo</th>
-  <th>Name</th>
-  <th>Parent</th>
-  <th>Role</th>
-  <th>Status</th>
-  <th>Actions</th>
+<th>Photo</th><th>Name</th><th>Parent</th><th>Role</th><th>Status</th><th>Actions</th>
 </tr>
 </thead>
 <tbody id="studentTable"></tbody>
@@ -98,432 +67,204 @@ body { padding-bottom: 70px; }
 </div>
 </div>
 
-<!-- ================= ADD / EDIT TAB ================= -->
+<!-- ================= ADD ================= -->
 <div class="tab-pane fade" id="tabAdd">
 <input id="sname" class="form-control mb-2" placeholder="Student Name">
 <input id="pname" class="form-control mb-2" placeholder="Parent Name">
-
 <select id="role" class="form-select mb-2">
   <option value="student">Student</option>
   <option value="operator">Operator</option>
 </select>
-
 <input type="file" id="img" class="form-control mb-2" accept="image/*">
-
-<button id="saveBtn" class="btn btn-success w-100" onclick="saveStudent()">Create User</button>
-<div id="credBox" class="alert alert-info mt-2 d-none"></div>
+<button id="saveBtn" class="btn btn-success w-100" onclick="saveStudent()">Save</button>
 </div>
 
-<!-- ================= RESET PASSWORD TAB ================= -->
-<div class="tab-pane fade" id="tabReset">
+<!-- ================= ATTENDANCE ================= -->
+<div class="tab-pane fade" id="tabAttendance">
+<div class="row g-2 mb-2">
+  <div class="col-md-4"><input type="month" id="monthFilter" class="form-control" onchange="renderAttendance()"></div>
+  <div class="col-md-4"><input type="date" id="fromDate" class="form-control" onchange="renderAttendance()"></div>
+  <div class="col-md-4"><input type="date" id="toDate" class="form-control" onchange="renderAttendance()"></div>
+</div>
+
 <div class="table-responsive">
-<table class="table table-bordered table-sm">
-<thead class="table-light">
-<tr>
-  <th>Username</th>
-  <th>Role</th>
-  <th>Password</th>
-  <th>Action</th>
-</tr>
-</thead>
-<tbody id="userTable"></tbody>
+<table class="table table-bordered table-sm" id="attendanceTable">
+<thead id="attendanceHead"></thead>
+<tbody id="attendanceBody"></tbody>
 </table>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tabAttendance">
-
-<div class="row g-2 mb-2">
-  <div class="col-md-3">
-    <input type="month" id="monthFilter" class="form-control" onchange="renderAttendance()">
-  </div>
-  <div class="col-md-3">
-    <input type="date" id="fromDate" class="form-control" placeholder="From" onchange="renderAttendance()">
-  </div>
-  <div class="col-md-3">
-    <input type="date" id="toDate" class="form-control" placeholder="To" onchange="renderAttendance()">
-  </div>
-  <div class="col-md-3">
-    <button class="btn btn-success w-100" onclick="downloadAttendance()">Download Excel</button>
-  </div>
-</div>
-
-<div class="table-responsive">
-  <table class="table table-bordered table-sm align-middle" id="attendanceTable">
-    <thead class="table-light" id="attendanceHead"></thead>
-    <tbody id="attendanceBody"></tbody>
-  </table>
-</div>
-
-</div>
-
 </div>
 </div>
-
-<!-- MOBILE BOTTOM TABS -->
-<ul class="nav nav-pills nav-fill fixed-bottom d-md-none bg-white border-top">
-  <li class="nav-item">
-    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabStudents">Students</button>
-  </li>
-  <li class="nav-item">
-    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAdd">Add</button>
-  </li>
-  <li class="nav-item">
-    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabReset">Reset</button>
-  </li>
-</ul>
-
-<!-- IMAGE MODAL -->
-<div class="modal fade" id="imgModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <img id="modalImg" class="img-fluid rounded">
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- RESET PASSWORD MODAL -->
-<div class="modal fade" id="resetModal">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5>Reset Password</h5>
-</div>
-<div class="modal-body">
-<label>Username</label>
-<input id="resetUser" class="form-control mb-2" readonly>
-<label>New Password</label>
-<input id="newPass" type="password" class="form-control" minlength="6">
-<small class="text-muted">Minimum 6 characters</small>
-</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-<button class="btn btn-primary" onclick="confirmReset()">Reset</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- TOAST -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div id="appToast" class="toast align-items-center text-bg-success border-0 fs-6">
-    <div class="d-flex">
-      <div class="toast-body fw-semibold" id="toastMsg"></div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"></button>
-    </div>
-  </div>
-</div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-let students = JSON.parse(localStorage.getItem('students')) || [];
-let users = JSON.parse(localStorage.getItem('users')) || [];
+/* ================= API ================= */
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxAHmQCPBJFUA6zfBtf4V8XNOC9tdpmSCbB4fI_Bnf84uVYbKWAWI3sz1jC4Hz78y4hGQ/exec";
+
+let students = [];
 let editId = null;
-let resetTarget = null;
 
-function genUsername(s,p){
-  let base = s.split(' ')[0] + '-' + p.split(' ')[0];
-  let i = 1;
-  while(users.find(u=>u.username===base)) base += i++;
-  return base;
+/* ================= LOAD ================= */
+function loadStudents(){
+  fetch(API_URL)
+    .then(r => r.json())
+    .then(data => {
+
+      // API returns array of objects
+      students = data.map(r => ({
+        id: r.Id,
+        date: r.date,
+        image: r.image,
+        name: r.Student,
+        parentName: r.parentt,
+        role: r.Role,
+        status: r.Status
+      }));
+
+      renderStudents();
+      renderAttendance();
+    });
 }
-function genPassword(){ return Math.random().toString(36).slice(-8); }
 
-function showToast(msg,type='success'){
-  const t=document.getElementById('appToast');
-  t.className=`toast align-items-center text-bg-${type} border-0`;
-  toastMsg.innerText=msg;
-  new bootstrap.Toast(t).show();
+/* ================= SAVE ================= */
+function saveStudent(){
+  editId ? updateStudent() : createStudent();
 }
-
-function saveStudent(){ editId===null ? createStudent() : updateStudent(); }
 
 function createStudent(){
-  if(!img.files[0]) return alert('Upload image');
+  if(!img.files[0]) return alert("Upload image");
+
   const r=new FileReader();
   r.onload=()=>{
-    const username=genUsername(sname.value,pname.value);
-    const password=genPassword();
+    const p=new URLSearchParams();
+    p.append("id",Date.now());
+    p.append("photo",r.result);
+    p.append("name",sname.value);
+    p.append("parentname",pname.value);
+    p.append("role",role.value);
 
-    students.push({
-      id:Date.now(),
-      name:sname.value,
-      parentName:pname.value,
-      parentUsername:username,
-      role:role.value,
-      image:r.result,
-      status:'active'
-    });
-
-    users.push({username,password,role:role.value,image:r.result});
-
-    localStorage.setItem('students',JSON.stringify(students));
-    localStorage.setItem('users',JSON.stringify(users));
-
-    credBox.classList.remove('d-none');
-    credBox.innerHTML=`Username: <b>${username}</b><br>Password: <b>${password}</b>`;
-
-    showToast('User created successfully');
-    renderStudents(); renderUsers();
-    new bootstrap.Tab(
-  document.querySelector('[data-bs-target="#tabStudents"]')
-).show();
+    fetch(API_URL,{method:"POST",body:p})
+      .then(()=>{ clearForm(); loadStudents(); });
   };
   r.readAsDataURL(img.files[0]);
 }
 
-function editStudent(id){
-  const s = students.find(x => x.id === id);
-
-  // ❌ Block operator editing
-  if (s.role === 'operator') {
-    showToast('Operator details cannot be edited','warning');
-    return;
-  }
-
-  editId = id;
-  sname.value = s.name;
-  pname.value = s.parentName;
-  role.value = s.role;
-  saveBtn.innerText = 'Update User';
-
-  new bootstrap.Tab(
-    document.querySelector('[data-bs-target="#tabAdd"]')
-  ).show();
-}
-
 function updateStudent(){
   const s=students.find(x=>x.id===editId);
-  s.name=sname.value;
-  s.parentName=pname.value;
-  s.role=role.value;
+  const p=new URLSearchParams();
+  p.append("action","edit");
+  p.append("id",s.id);
+  p.append("photo",s.image);
+  p.append("name",sname.value);
+  p.append("parentname",pname.value);
+  p.append("role",role.value);
 
-  if(img.files[0]){
-    const r=new FileReader();
-    r.onload=()=>{ s.image=r.result; finishUpdate(); };
-    r.readAsDataURL(img.files[0]);
-  } else finishUpdate();
+  fetch(API_URL,{method:"POST",body:p})
+    .then(()=>{ clearForm(); loadStudents(); });
 }
 
-function finishUpdate(){
-  localStorage.setItem('students',JSON.stringify(students));
-  saveBtn.innerText='Create User';
+function clearForm(){
   editId=null;
-  img.value='';
-//   showToast('User updated','primary');
-  renderStudents();
-  showToast('User updated successfully','success');
+  sname.value=pname.value="";
+  img.value="";
+  saveBtn.innerText="Save";
+}
 
-  // 👉 go back to students tab
-  new bootstrap.Tab(
-    document.querySelector('[data-bs-target="#tabStudents"]')
-  ).show();
-
+/* ================= ACTIONS ================= */
+function editStudent(id){
+  const s=students.find(x=>x.id===id);
+  editId=id;
+  sname.value=s.name;
+  pname.value=s.parentName;
+  role.value=s.role;
+  saveBtn.innerText="Update";
+  new bootstrap.Tab(document.querySelector('[data-bs-target="#tabAdd"]')).show();
 }
 
 function setStatus(id,status){
-  if(status==='deleted' && !confirm('Delete this user?')) return;
-  students.find(s=>s.id===id).status=status;
-  localStorage.setItem('students',JSON.stringify(students));
-  renderStudents();
+  const p=new URLSearchParams();
+  p.append("action",status==="deleted"?"delete":"status");
+  p.append("id",id);
+  if(status!=="deleted") p.append("status",status);
+
+  fetch(API_URL,{method:"POST",body:p})
+    .then(loadStudents);
 }
 
-function openReset(username){
-  resetTarget=users.find(u=>u.username===username);
-  resetUser.value=username;
-  newPass.value='';
-  new bootstrap.Modal(resetModal).show();
-}
-
-function confirmReset(){
-  if(newPass.value.length<6) return alert('Minimum 6 characters');
-  resetTarget.password=newPass.value;
-  localStorage.setItem('users',JSON.stringify(users));
-  bootstrap.Modal.getInstance(resetModal).hide();
-  showToast('Password reset','warning');
-  renderUsers();
-}
-
+/* ================= TABLE ================= */
 function renderStudents(){
   const sf=statusFilter.value;
   const rf=roleFilter.value;
-  const st=searchType.value;
   const txt=searchTxt.value.toLowerCase();
 
   studentTable.innerHTML=students.filter(s=>{
-    if(sf!=='all' && s.status!==sf) return false;
-    if(rf!=='all' && s.role!==rf) return false;
-    if(txt){
-      return st==='student'
-        ? s.name.toLowerCase().includes(txt)
-        : s.parentUsername.toLowerCase().includes(txt);
-    }
+    if(sf!=="all" && s.status!==sf) return false;
+    if(rf!=="all" && s.role!==rf) return false;
+    if(txt && !s.name.toLowerCase().includes(txt)) return false;
     return true;
   }).map(s=>`
 <tr>
-<td><img src="${s.image}" class="rounded-circle img-thumb"
- onclick="modalImg.src='${s.image}';new bootstrap.Modal(imgModal).show()"></td>
+<td><img src="${s.image}" class="img-thumb rounded-circle"></td>
 <td>${s.name}</td>
 <td>${s.parentName}</td>
 <td>${s.role}</td>
 <td>${s.status}</td>
 <td class="action-btns">
-<button class="btn btn-sm btn-outline-primary"
-  ${s.role==='operator' ? 'disabled' : ''}
-  onclick="editStudent(${s.id})">✏️</button>
-
-  <button class="btn btn-sm btn-warning" onclick="setStatus(${s.id},'suspended')">Suspend</button>
-  <button class="btn btn-sm btn-success" onclick="setStatus(${s.id},'active')">Activate</button>
-  <button class="btn btn-sm btn-danger" onclick="setStatus(${s.id},'deleted')">Delete</button>
+<button class="btn btn-sm btn-primary" onclick="editStudent(${s.id})">✏️</button>
+<button class="btn btn-sm btn-warning" onclick="setStatus(${s.id},'suspended')">Suspend</button>
+<button class="btn btn-sm btn-success" onclick="setStatus(${s.id},'active')">Activate</button>
+<button class="btn btn-sm btn-danger" onclick="setStatus(${s.id},'deleted')">Delete</button>
 </td>
-</tr>`).join('');
+</tr>`).join("");
 }
 
-function renderUsers(){
-  userTable.innerHTML=users.map(u=>`
-<tr>
-<td>${u.username}</td>
-<td>${u.role}</td>
-<td>${u.password}</td>
-<td><button class="btn btn-sm btn-warning" onclick="openReset('${u.username}')">Reset</button></td>
-</tr>`).join('');
+/* ================= ATTENDANCE (LOCAL) ================= */
+let attendance=JSON.parse(localStorage.getItem("attendance"))||[];
+
+function getDatesInRange(a,b){
+  let d=new Date(a),arr=[];
+  while(d<=b){ arr.push(new Date(d)); d.setDate(d.getDate()+1); }
+  return arr;
 }
 
-renderStudents();
-renderUsers();
-
-</script>
-
-
-<script>
-   // ================= ATTENDANCE LOGIC =================
-let attendance = JSON.parse(localStorage.getItem('attendance')) || [];
-
-// Helper: Get all dates in a range
-function getDatesInRange(start, end) {
-  let d = new Date(start), dates = [];
-  while(d <= new Date(end)){
-    dates.push(new Date(d));
-    d.setDate(d.getDate() + 1);
-  }
-  return dates;
-}
-
-// ================= RENDER ATTENDANCE =================
 function renderAttendance(){
-  let month = monthFilter.value;
-  let from = fromDate.value;
-  let to = toDate.value;
+  if(!monthFilter.value) return;
+  let [y,m]=monthFilter.value.split("-");
+  let start=new Date(y,m-1,1);
+  let end=new Date(y,m,0);
+  let dates=getDatesInRange(start,end);
 
-  let dates = [];
-  if(from && to){ // Date range overrides month
-    dates = getDatesInRange(new Date(from), new Date(to));
-  } else if(month){
-    let [y,m] = month.split('-');
-    let start = new Date(y, m-1, 1);
-    let end = new Date(y, m, 0);
-    dates = getDatesInRange(start, end);
-  } else return;
-
-  const today = new Date();
-  const todayStr = today.toISOString().slice(0,10);
-
-  // Filter dates: only show past dates + today
-  let visibleDates = dates.filter(d => d <= today);
-
-  // Header
-  attendanceHead.innerHTML = `<tr>
-    <th>Student</th>
-    ${visibleDates.map(d => {
-      let classes = '';
-      if(d.getDay() === 5) classes = 'bg-success text-white'; // Friday = holiday
-      else if(d.toISOString().slice(0,10) === todayStr) classes = 'bg-warning';
-
-      // Format DD/MM/YYYY
-      const dd = String(d.getDate()).padStart(2,'0');
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const yyyy = d.getFullYear();
-
-      return `<th class="text-center ${classes}">${dd}/${mm}/${yyyy}</th>`;
-    }).join('')}
-  </tr>`;
-
-  // Body
-  attendanceBody.innerHTML = students
-    .filter(s => s.status === 'active')
-    .map(s => {
-      return `<tr>
-        <td><img src="${s.image}" class="img-thumb me-1 rounded-circle">${s.name}</td>
-        ${visibleDates.map(d => {
-          const dateStr = d.toISOString().slice(0,10);
-          let record = attendance.find(a => a.studentId === s.id && a.date === dateStr);
-          let checked = record ? 'checked' : '';
-
-          // Disable future dates & Fridays
-          const disabled = (d.getDay() === 5) ? 'disabled' : '';
-
-          // Cell classes
-          let cellClass = '';
-          if(d.getDay() === 5) cellClass = 'bg-success text-white'; // Friday
-          else if(dateStr === todayStr) cellClass = 'bg-warning'; // Today
-
-          return `<td class="text-center ${cellClass}">
-            <input type="checkbox" onchange="toggleAttendance(${s.id},'${dateStr}',this.checked)" ${checked} ${disabled}>
-          </td>`;
-        }).join('')}
-      </tr>`;
-    }).join('');
+  attendanceHead.innerHTML="<tr><th>Student</th>"+dates.map(d=>`<th>${d.getDate()}</th>`).join("")+"</tr>";
+  attendanceBody.innerHTML=students.filter(s=>s.status==="active").map(s=>`
+<tr>
+<td>${s.name}</td>
+${dates.map(d=>{
+  const ds=d.toISOString().slice(0,10);
+  const chk=attendance.find(a=>a.studentId===s.id&&a.date===ds);
+  return `<td class="text-center">
+  <input type="checkbox" ${chk?"checked":""}
+  onchange="toggleAttendance(${s.id},'${ds}',this.checked)">
+  </td>`;
+}).join("")}
+</tr>`).join("");
 }
 
-// ================= TOGGLE ATTENDANCE =================
-function toggleAttendance(studentId,date,isPresent){
-  let index = attendance.findIndex(a=>a.studentId===studentId && a.date===date);
-  if(index>=0){
-    if(!isPresent) attendance.splice(index,1);
-  } else {
-    if(isPresent) attendance.push({studentId,date});
-  }
-  localStorage.setItem('attendance',JSON.stringify(attendance));
+function toggleAttendance(id,date,val){
+  let i=attendance.findIndex(a=>a.studentId===id&&a.date===date);
+  if(val && i<0) attendance.push({studentId:id,date});
+  if(!val && i>=0) attendance.splice(i,1);
+  localStorage.setItem("attendance",JSON.stringify(attendance));
 }
 
-// ================= DOWNLOAD EXCEL =================
-function downloadAttendance(){
-  const table = document.getElementById('attendanceTable');
-
-  // Clone table to manipulate without affecting screen
-  const clone = table.cloneNode(true);
-
-  // Replace checkboxes with text
-  clone.querySelectorAll('input[type=checkbox]').forEach(cb => {
-    const td = cb.parentElement;
-    const parentClasses = td.className;
-    if(parentClasses.includes('bg-success')) {
-      td.innerText = 'Holiday'; // Friday
-    } else {
-      td.innerText = cb.checked ? 'Present' : 'Absent';
-    }
-  });
-
-  // Convert table to workbook using SheetJS
-  const ws = XLSX.utils.table_to_sheet(clone, {raw:true}); // raw:true treats everything as text
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Attendance");
-  XLSX.writeFile(wb, "Attendance.xlsx");
-}
-
-// ================= SET DEFAULT CURRENT MONTH =================
-const now = new Date();
-const yyyy = now.getFullYear();
-const mm = String(now.getMonth() + 1).padStart(2, '0');
-monthFilter.value = `${yyyy}-${mm}`;
-renderAttendance();
-
-
+/* ================= INIT ================= */
+const now=new Date();
+monthFilter.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+loadStudents();
 </script>
+
 </body>
 </html>

@@ -1,4 +1,23 @@
 let students = JSON.parse(localStorage.getItem('students')) || [];
+let users = JSON.parse(localStorage.getItem('users')) || [];
+
+const filter = document.getElementById('filter');
+const list = document.getElementById('list');
+const cred = document.getElementById('cred');
+
+const sname = document.getElementById('sname');
+const pname = document.getElementById('pname');
+const img = document.getElementById('img');
+const role = document.getElementById('role');
+
+const ruser = document.getElementById('ruser');
+const rpass = document.getElementById('rpass');
+
+// Clear search/filter on load
+filter.value = 'all';
+
+render();
+
 function addStudent(){
 const reader = new FileReader();
 reader.onload = () => {
