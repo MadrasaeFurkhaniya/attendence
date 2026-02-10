@@ -7,7 +7,7 @@ function login() {
     return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyVFubNl6Ak38pQ9Q3YSdcNkwb6q01d2WcQJyFPQv1XDE0yqh3RqXEQ-meL20mvsq7Mog/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxZ2-VotrvPwrsO0Hv9vtdjgdm5vDjOdXVR6_9hOxkGdTQ2WBy2uGuAqJxaXK32LNZmOA/exec", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"

@@ -17,54 +17,14 @@ body { padding-bottom: 70px; }
 
 <body class="bg-light">
 
-
-<nav class="navbar bg-white shadow-sm px-3 d-flex justify-content-between align-items-center">
-  
-  <div class="d-flex align-items-center gap-2">
-    <img 
-      src="./img/madraseFurkhaniya.png" 
-      width="40" 
-      height="40"
-      alt="Logo"
-      style="border-radius: 50%;">
-    <strong>Madrasaye Furkhaniya</strong>
-  </div>
-
-  <div class="d-flex align-items-center gap-2">
-   <img 
-  id="navProfile"
-  src="./img/zeeshan-jami.jpeg"
-  width="36"
-  height="36"
-  class="rounded-circle"
-  style="object-fit:cover; cursor:pointer"
-  onclick="openNavProfile()">
-
-
-    <button 
-      class="btn btn-outline-danger btn-sm"
-      onclick="logout()">
-      Logout
-    </button>
-  </div>
-
+<nav class="navbar bg-white shadow-sm px-3 d-flex justify-content-between">
+  <strong>My School</strong>
+  <span>Admin</span>
 </nav>
-
-
-
-
-
-<div class="d-md-none mb-2">
-  <select class="form-select" onchange="switchTab(this.value)">
-    <option value="#tabStudents">Students</option>
-    <option value="#tabAdd">Add / Edit</option>
-    <option value="#tabAttendance">Attendance</option>
-  </select>
-</div>
 
 <div class="container mt-3">
 
-<ul class="nav nav-tabs ">
+<ul class="nav nav-tabs d-none d-md-flex">
   <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabStudents">Students</button></li>
   <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAdd">Add / Edit</button></li>
   <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAttendance">Attendance</button></li>
@@ -116,12 +76,7 @@ body { padding-bottom: 70px; }
   <option value="operator">Operator</option>
 </select>
 <input type="file" id="img" class="form-control mb-2" accept="image/*">
-<button id="saveBtn" class="btn btn-success w-100" onclick="saveStudent()">Add User</button>
-<div id="credentialBox" class="alert alert-info mt-3 d-none">
-  <strong>Login Created</strong><br>
-  Username: <span id="genUser"></span><br>
-  Password: <span id="genPass"></span>
-</div>
+<button id="saveBtn" class="btn btn-success w-100" onclick="saveStudent()">Save</button>
 </div>
 
 <!-- ================= ATTENDANCE ================= -->
@@ -148,7 +103,7 @@ body { padding-bottom: 70px; }
 <script>
 /* ================= API ================= */
 const API_URL =
-"https://script.google.com/macros/s/AKfycbxZ2-VotrvPwrsO0Hv9vtdjgdm5vDjOdXVR6_9hOxkGdTQ2WBy2uGuAqJxaXK32LNZmOA/exec";
+"https://script.google.com/macros/s/AKfycbxAHmQCPBJFUA6zfBtf4V8XNOC9tdpmSCbB4fI_Bnf84uVYbKWAWI3sz1jC4Hz78y4hGQ/exec";
 
 let students = [];
 let editId = null;
@@ -183,51 +138,17 @@ function saveStudent(){
 function createStudent(){
   if(!img.files[0]) return alert("Upload image");
 
-  saveBtn.disabled = true;
-  saveBtn.innerText = "Creating...";
+  const r=new FileReader();
+  r.onload=()=>{
+    const p=new URLSearchParams();
+    p.append("id",Date.now());
+    p.append("photo",r.result);
+    p.append("name",sname.value);
+    p.append("parentname",pname.value);
+    p.append("role",role.value);
 
-  const studentName = sname.value.trim();
-  const parentName = pname.value.trim();
-
-  if(!studentName || !parentName){
-    alert("Enter student & parent name");
-    saveBtn.disabled = false;
-    saveBtn.innerText = "Save";
-    return;
-  }
-
-  // ✅ Generate Username & Password
-  const username =
-    studentName.split(" ")[0] + "-" + parentName.split(" ")[0];
-
-  const id = Date.now();
-  const password =
-    studentName.substring(0,4).toLowerCase() + id.toString().slice(-4);
-
-  const r = new FileReader();
-  r.onload = () => {
-    const p = new URLSearchParams();
-    p.append("id", id);
-    p.append("photo", r.result);
-    p.append("name", studentName);
-    p.append("parentname", parentName);
-    p.append("role", role.value);
-    p.append("username", username);
-    p.append("password", password);
-
-    fetch(API_URL,{ method:"POST", body:p })
-      .then(() => {
-        loadStudents();
-        clearForm();
-
-        // ✅ Show credentials
-        genUser.innerText = username;
-        genPass.innerText = password;
-        credentialBox.classList.remove("d-none");
-
-        saveBtn.disabled = false;
-        saveBtn.innerText = "Save";
-      });
+    fetch(API_URL,{method:"POST",body:p})
+      .then(()=>{ clearForm(); loadStudents(); });
   };
   r.readAsDataURL(img.files[0]);
 }
@@ -247,12 +168,11 @@ function updateStudent(){
 }
 
 function clearForm(){
-  editId = null;
-  sname.value = pname.value = "";
-  img.value = "";
-  saveBtn.innerText = "Add User";
+  editId=null;
+  sname.value=pname.value="";
+  img.value="";
+  saveBtn.innerText="Save";
 }
-
 
 /* ================= ACTIONS ================= */
 function editStudent(id){
@@ -263,7 +183,6 @@ function editStudent(id){
   role.value=s.role;
   saveBtn.innerText="Update";
   new bootstrap.Tab(document.querySelector('[data-bs-target="#tabAdd"]')).show();
-  credentialBox.classList.add("d-none");
 }
 
 function setStatus(id,status){
@@ -278,42 +197,29 @@ function setStatus(id,status){
 
 /* ================= TABLE ================= */
 function renderStudents(){
-  const sf = statusFilter.value;
-  const rf = roleFilter.value;
-  const txt = searchTxt.value.toLowerCase();
+  const sf=statusFilter.value;
+  const rf=roleFilter.value;
+  const txt=searchTxt.value.toLowerCase();
 
-  studentTable.innerHTML = students
-    .filter(s => {
-
-      // 🚫 HIDE ADMIN FROM TABLE
-      if (s.role === "admin") return false;
-
-      if (sf !== "all" && s.status !== sf) return false;
-      if (rf !== "all" && s.role !== rf) return false;
-      if (txt && !s.name.toLowerCase().includes(txt)) return false;
-
-      return true;
-    })
-    .map(s => `
+  studentTable.innerHTML=students.filter(s=>{
+    if(sf!=="all" && s.status!==sf) return false;
+    if(rf!=="all" && s.role!==rf) return false;
+    if(txt && !s.name.toLowerCase().includes(txt)) return false;
+    return true;
+  }).map(s=>`
 <tr>
-  <td>
-    <img 
-      src="${s.image}" 
-      class="img-thumb rounded-circle"
-      onclick="openImage('${s.image}')">
-  </td>
-  <td>${s.name}</td>
-  <td>${s.parentName}</td>
-  <td>${s.role}</td>
-  <td>${s.status}</td>
-  <td class="action-btns">
-    <button class="btn btn-sm btn-primary" onclick="editStudent(${s.id})">✏️</button>
-    <button class="btn btn-sm btn-warning" onclick="setStatus(${s.id},'suspended')">Suspend</button>
-    <button class="btn btn-sm btn-success" onclick="setStatus(${s.id},'active')">Activate</button>
-    <button class="btn btn-sm btn-danger" onclick="setStatus(${s.id},'deleted')">Delete</button>
-  </td>
-</tr>
-`).join("");
+<td><img src="${s.image}" class="img-thumb rounded-circle"></td>
+<td>${s.name}</td>
+<td>${s.parentName}</td>
+<td>${s.role}</td>
+<td>${s.status}</td>
+<td class="action-btns">
+<button class="btn btn-sm btn-primary" onclick="editStudent(${s.id})">✏️</button>
+<button class="btn btn-sm btn-warning" onclick="setStatus(${s.id},'suspended')">Suspend</button>
+<button class="btn btn-sm btn-success" onclick="setStatus(${s.id},'active')">Activate</button>
+<button class="btn btn-sm btn-danger" onclick="setStatus(${s.id},'deleted')">Delete</button>
+</td>
+</tr>`).join("");
 }
 
 /* ================= ATTENDANCE (LOCAL) ================= */
@@ -358,57 +264,7 @@ function toggleAttendance(id,date,val){
 const now=new Date();
 monthFilter.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
 loadStudents();
-
-function logout() {
-  localStorage.removeItem("currentUser");
-  location.href = "index.html"; // your login page
-}
-/* ================= NAV PROFILE IMAGE ================= */
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-if (currentUser && currentUser.image) {
-  const img = document.getElementById("navProfile");
-  if (img) img.src = currentUser.image;
-}
-
-function openImage(src) {
-  document.getElementById("modalImg").src = src;
-  new bootstrap.Modal(document.getElementById("imgModal")).show();
-}
-function openNavProfile() {
-  const img = document.getElementById("navProfile");
-  if (!img || !img.src) return;
-
-  document.getElementById("modalImg").src = img.src;
-  new bootstrap.Modal(document.getElementById("imgModal")).show();
-}
-
-// 🔒 Hide credentials when switching tabs
-document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
-  tab.addEventListener('shown.bs.tab', () => {
-    const box = document.getElementById("credentialBox");
-    if (box) box.classList.add("d-none");
-  });
-});
-
-function switchTab(target) {
-  const tab = document.querySelector(`[data-bs-target="${target}"]`);
-  if (tab) new bootstrap.Tab(tab).show();
-}
-
 </script>
-
-
-<!-- IMAGE MODAL -->
-<div class="modal fade" id="imgModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <img id="modalImg" src="" class="img-fluid rounded">
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
