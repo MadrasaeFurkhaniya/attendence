@@ -408,6 +408,12 @@ function resetStudentForm() {
   $("#studentId").value = "";
   $("#joiningDate").value = today;
   $("#studentStatus").value = "active";
+
+   // Clear uploaded image
+  $("#studentImage").value = "";
+  $("#imagePreview").src = "";
+  $("#imagePreview").style.display = "none";
+  $("#uploadIcon").style.display = "block";
 }
 
 function resetOperatorForm() {
@@ -490,6 +496,7 @@ $("#credentialForm").addEventListener("submit", async (event) => {
 function showPreview(item, targetId) {
   const target = $(`#${targetId}`);
   const isStudent = Boolean(item.parentName);
+
   target.innerHTML = `
     <img class="avatar" src="${item.image || placeholderImage(item.name)}" alt="${item.name}">
     <div class="meta-grid">
@@ -499,7 +506,15 @@ function showPreview(item, targetId) {
       <div class="meta-item"><span>Password</span><strong>${item.password}</strong></div>
     </div>
   `;
+
   target.classList.remove("hidden");
+
+  // Hide after 10 seconds
+  clearTimeout(target.hideTimer);
+  target.hideTimer = setTimeout(() => {
+    target.classList.add("hidden");
+    target.innerHTML = "";
+  }, 10000);
 }
 
 function renderAll() {
@@ -1395,4 +1410,25 @@ $("#attendanceMonth").addEventListener("change", async () => {
 
   await withLoading("Loading attendance...", refreshData);
   renderAttendance();
+});
+
+const studentImage = document.getElementById("studentImage"); const imagePreview = document.getElementById("imagePreview"); const uploadIcon = document.getElementById("uploadIcon"); studentImage.addEventListener("change", function () { const file = this.files[0]; if (file) { const reader = new FileReader(); reader.onload = function (e) { imagePreview.src = e.target.result; imagePreview.style.display = "block"; uploadIcon.style.display = "none"; }; reader.readAsDataURL(file); } });
+// Student Phone
+$("#studentPhone").addEventListener("input", function () {
+  this.value = this.value.replace(/\D/g, "").slice(0, 10);
+});
+
+// Parent Phone
+$("#parentPhone").addEventListener("input", function () {
+  this.value = this.value.replace(/\D/g, "").slice(0, 10);
+});
+
+// Student Name
+$("#studentName").addEventListener("input", function () {
+  this.value = this.value.replace(/[^a-zA-Z\s]/g, "");
+});
+
+// Parent Name
+$("#parentName").addEventListener("input", function () {
+  this.value = this.value.replace(/[^a-zA-Z\s]/g, "");
 });

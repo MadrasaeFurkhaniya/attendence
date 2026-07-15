@@ -1391,3 +1391,4 @@ input[type="month"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
 }
 
+.image-upload-box { display: flex; flex-direction: column; gap: 8px; font-weight: 600; } .upload-area { width: 150px; height: 150px; border: 2px dashed #ccc; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: #f8f8f8; transition: 0.3s; } .upload-area:hover { border-color: #007bff; background: #f0f7ff; } #uploadIcon { text-align: center; color: #777; font-size: 32px; } #uploadIcon p { font-size: 14px; margin: 5px 0; } #imagePreview { width: 100%; height: 100%; object-fit: cover; display: none; }

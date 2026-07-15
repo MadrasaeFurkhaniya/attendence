@@ -119,57 +119,105 @@
           <button id="clearStudentForm" class="ghost-btn" type="button">Clear</button>
         </div>
 
-        <form id="studentForm" class="grid-form">
-          <input id="studentId" type="hidden">
-          <label>
-            Student Image
-            <input id="studentImage" type="file" accept="image/*">
-          </label>
-          <label>
-            Student Name
-            <input id="studentName" type="text" placeholder="Enter the student name" required>
-          </label>
-          <label>
-            Student Phone
-            <input id="studentPhone" type="tel" placeholder="Enter the student phone" required>
-          </label>
-          <label>
-            Parent Name
-            <input id="parentName" type="text" placeholder="Enter the parent name" required>
-          </label>
-          <label>
-            Parent Phone
-            <input id="parentPhone" type="tel" placeholder="Enter the parent phone" required>
-          </label>
-          <label>
-            Studying
-            <select id="studying" required>
-              <option value="">Select Studying</option>
-              <option>Noorani Khaida</option>
-              <option>Amma Para</option>
-              <option>Quran-E-Majid</option>
-              <option>Chehl Hadees</option>
-              <option>Masnoon Duain</option>
-              <option>Asma-ul-Husna</option>
-              <option>Fiqh</option>
-              <option>Surahs</option>
-              <option>Urdu</option>
-              <option>Kalima</option>
-            </select>
-          </label>
-          <label>
-            Joining Date
-            <input id="joiningDate" type="date" required>
-          </label>
-          <label>
-            Status
-            <select id="studentStatus" required>
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
-            </select>
-          </label>
-          <button class="primary-btn form-action" type="submit">Save Student</button>
-        </form>
+     <form id="studentForm" class="grid-form">
+  <input id="studentId" type="hidden">
+
+  <label class="image-upload-box">
+    <span>Student Image</span>
+    <div class="upload-area" onclick="document.getElementById('studentImage').click()">
+      <img id="imagePreview" src="" alt="Image Preview">
+      <div id="uploadIcon">
+        📷
+        <p>Upload Image</p>
+      </div>
+    </div>
+    <input id="studentImage" type="file" accept="image/*" hidden>
+  </label>
+
+  <label>
+    Student Name
+    <input
+      id="studentName"
+      type="text"
+      placeholder="Enter the student name"
+      maxlength="50"
+      pattern="[A-Za-z ]+"
+      required
+    >
+  </label>
+
+  <label>
+    Student Phone
+    <input
+      id="studentPhone"
+      type="tel"
+      placeholder="Enter the student phone"
+      maxlength="10"
+      pattern="[6-9][0-9]{9}"
+      inputmode="numeric"
+      required
+    >
+  </label>
+
+  <label>
+    Parent Name
+    <input
+      id="parentName"
+      type="text"
+      placeholder="Enter the parent name"
+      maxlength="50"
+      pattern="[A-Za-z ]+"
+      required
+    >
+  </label>
+
+  <label>
+    Parent Phone
+    <input
+      id="parentPhone"
+      type="tel"
+      placeholder="Enter the parent phone"
+      maxlength="10"
+      pattern="[6-9][0-9]{9}"
+      inputmode="numeric"
+      required
+    >
+  </label>
+
+  <label>
+    Studying
+    <select id="studying" required>
+      <option value="">Select Studying</option>
+      <option>Noorani Khaida</option>
+      <option>Amma Para</option>
+      <option>Quran-E-Majid</option>
+      <option>Chehl Hadees</option>
+      <option>Masnoon Duain</option>
+      <option>Asma-ul-Husna</option>
+      <option>Fiqh</option>
+      <option>Surahs</option>
+      <option>Urdu</option>
+      <option>Kalima</option>
+    </select>
+  </label>
+
+  <label>
+    Joining Date
+    <input id="joiningDate" type="date" required>
+  </label>
+
+  <label>
+    Status
+    <select id="studentStatus" required>
+      <option value="active">Active</option>
+      <option value="suspended">Suspended</option>
+    </select>
+  </label>
+
+  <button class="primary-btn form-action" type="submit">
+    Save Student
+  </button>
+</form>
 
         <div id="studentPreview" class="preview-card hidden"></div>
       </section>
