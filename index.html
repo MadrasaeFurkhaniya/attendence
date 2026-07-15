@@ -1,77 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Login</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    body {
-      min-height: 100vh;
-      background: #f4f6f9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px; /* ✅ mobile spacing */
-    }
-
-    .login-card {
-      max-width: 400px;
-      width: 100%;
-      border-radius: 12px;
-    }
-
-    .login-icon {
-      width: 70px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 576px) {
-      .login-card {
-        box-shadow: none;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Attendance Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+  <main class="app-shell">
+    <section id="loginView" class="login-view">
+    <div class="brand-panel">
+    <div class="logo-circle">
+        <img src="./images/madrase_furkhaniya-removebg.png"
+             alt="Madrase Furkhaniya Logo">
+    </div>
 
-  <div class="card login-card shadow">
-    <div class="card-body text-center p-4">
+    <span class="eyebrow">Welcome</span>
 
-      <img
-        src="./img/madraseFurkhaniya.png"
-        class="login-icon" style="width: 85%;"
-        alt="Login">
+    <h1 class="hero-title glow-text">
+        Madrasa Ahle Sunnat Wal Jamaat
+    </h1>
 
-      <h4 class="mb-4">Madrasaye Furkhaniya Login</h4>
+    <p class="hero-subtitle glow-text">
+        Kaiwar
+    </p>
 
-      <input
-        id="username"
-        class="form-control mb-3"
-        placeholder="Username">
+    <div class="floating-shapes">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
 
-      <input
-        id="password"
-        type="password"
-        class="form-control mb-4"
-        placeholder="Password">
+      <form id="loginForm" class="login-card">
+        <h2>Login</h2>
+        <label>
+          Username
+          <input id="loginUsername" type="text" autocomplete="username" placeholder="Enter your username" required>
+        </label>
+        <label>
+          Password
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password"
+            required>
+        </label>
+        <button class="primary-btn" type="submit">Sign in</button>
+        <!-- <p class="hint">Default admin: <strong>admin</strong> / <strong>admin123</strong></p> -->
+        <p id="loginError" class="error-text"></p>
+      </form>
+    </section>
 
-      <button
-        class="btn btn-primary w-100 py-2"
-        onclick="login()">
-        Login
-      </button>
+    <section id="dashboardView" class="dashboard hidden">
+      <header class="topbar">
+        <div class="header-title">
+          <img src="images/madrase_furkhaniya.png" alt="Logo" class="app-logo">
 
-      <div id="msg" class="text-danger mt-3"></div>
+          <div>
+            <p id="roleLabel" class="eyebrow">Admin</p>
+            <h1 id="dashboardTitle">Dashboard</h1>
+          </div>
+        </div>
 
+        <div class="header-profile">
+          <button id="profileImageBtn" class="profile-image-btn" type="button" title="Change profile image">
+            <img id="headerAvatar" class="header-avatar" src="" alt="Profile">
+          </button>
+
+          <input id="profileImageInput" class="hidden" type="file" accept="image/*">
+
+          <button id="logoutBtn" class="ghost-btn" type="button">
+            <span>⏻</span> Logout
+          </button>
+        </div>
+      </header>
+
+      <div id="adminTabs" class="bottom-tabs hidden">
+        <button class="tab-btn active" data-tab="addStudent">
+          <span class="tab-icon">🏠</span>
+          <span class="tab-label">Home</span>
+        </button>
+
+        <button class="tab-btn" data-tab="students">
+          <span class="tab-icon">📦</span>
+          <span class="tab-label">Students</span>
+        </button>
+
+        <button class="tab-btn" data-tab="credentials">
+          <span class="tab-icon">🔐</span>
+          <span class="tab-label">Credentials</span>
+        </button>
+
+        <button class="tab-btn" data-tab="operators">
+          <span class="tab-icon">👤</span>
+          <span class="tab-label">Operators</span>
+        </button>
+
+        <button class="tab-btn" data-tab="attendance">
+          <span class="tab-icon">📅</span>
+          <span class="tab-label">Attendance</span>
+        </button>
+      </div>
+
+      <div id="operatorTabs" class="tabbar bottom-tabs hidden">
+        <button class="tab-btn active" data-tab="attendance" aria-label="Take Attendance"><span
+            class="tab-icon">✓</span><span class="tab-label">Take Attendance</span></button>
+      </div>
+
+      <section id="addStudentPanel" class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>Add / Edit Student</h2>
+            <p>Username and password are generated automatically when a student is created.</p>
+          </div>
+          <button id="clearStudentForm" class="ghost-btn" type="button">Clear</button>
+        </div>
+
+        <form id="studentForm" class="grid-form">
+          <input id="studentId" type="hidden">
+          <label>
+            Student Image
+            <input id="studentImage" type="file" accept="image/*">
+          </label>
+          <label>
+            Student Name
+            <input id="studentName" type="text" placeholder="Enter the student name" required>
+          </label>
+          <label>
+            Student Phone
+            <input id="studentPhone" type="tel" placeholder="Enter the student phone" required>
+          </label>
+          <label>
+            Parent Name
+            <input id="parentName" type="text" placeholder="Enter the parent name" required>
+          </label>
+          <label>
+            Parent Phone
+            <input id="parentPhone" type="tel" placeholder="Enter the parent phone" required>
+          </label>
+          <label>
+            Studying
+            <select id="studying" required>
+              <option value="">Select Studying</option>
+              <option>Noorani Khaida</option>
+              <option>Amma Para</option>
+              <option>Quran-E-Majid</option>
+              <option>Chehl Hadees</option>
+              <option>Masnoon Duain</option>
+              <option>Asma-ul-Husna</option>
+              <option>Fiqh</option>
+              <option>Surahs</option>
+              <option>Urdu</option>
+              <option>Kalima</option>
+            </select>
+          </label>
+          <label>
+            Joining Date
+            <input id="joiningDate" type="date" required>
+          </label>
+          <label>
+            Status
+            <select id="studentStatus" required>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </label>
+          <button class="primary-btn form-action" type="submit">Save Student</button>
+        </form>
+
+        <div id="studentPreview" class="preview-card hidden"></div>
+      </section>
+
+      <section id="studentsPanel" class="panel hidden">
+        <div class="panel-title">
+          <div>
+            <h2>Students List</h2>
+            <p>View image, phone, parent details, credentials, and actions.</p>
+          </div>
+        </div>
+        <div class="attendance-toolbar">
+  <input
+    id="studentSearch"
+    class="attendance-toolbar-input"
+    type="text"
+    placeholder="Search student..."
+  />
+</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Phone</th>
+                <th>Parent</th>
+                <th>Studying</th>
+                <th>Status</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="credentialsPanel" class="panel hidden">
+        <div class="panel-title">
+          <div>
+            <h2>Student Credentials</h2>
+            <p>Reset passwords and edit usernames for parent/student login.</p>
+          </div>
+        </div>
+        <div id="credentialList" class="credential-list"></div>
+      </section>
+
+      <section id="operatorsPanel" class="panel hidden">
+        <div class="panel-title">
+          <div>
+            <h2>Operators</h2>
+            <p>Operators can only take attendance.</p>
+          </div>
+        </div>
+        <form id="operatorForm" class="inline-form">
+          <input id="operatorId" type="hidden">
+          <label>
+            Staff Image
+            <input id="operatorImage" type="file" accept="image/*">
+          </label>
+          <label>
+            Role
+            <select id="operatorRole" required>
+              <option value="operator">Operator</option>
+              <option value="admin">Admin</option>
+            </select>
+          </label>
+          <label>
+            Name
+            <input id="operatorName" type="text" placeholder="Please enter staff name" required>
+          </label>
+          <label>
+            Phone
+            <input id="operatorPhone" type="number" placeholder="Please enter staff Phone number" required>
+          </label>
+          <button class="primary-btn" type="submit">Save Staff</button>
+        </form>
+        <div id="operatorList" class="credential-list"></div>
+      </section>
+
+      <section id="attendancePanel" class="panel hidden">
+        <div class="panel-title">
+          <div>
+            <h2>Take Attendance</h2>
+            <p>Tick a date to mark present.</p>
+          </div>
+
+          <div class="attendance-toolbar">
+            <input id="attendanceSearch" class="attendance-toolbar-input" type="text" placeholder="Search student..." />
+
+            <input id="attendanceMonth" class="date-picker" type="month" />
+          </div>
+        </div>
+        <div id="attendanceList" class="attendance-list"></div>
+      </section>
+
+     <section id="parentPanel" class="panel hidden">
+
+  <div class="panel-title">
+    <div>
+      <h2>Attendance Report</h2>
+      <p>View your child's monthly attendance.</p>
+    </div>
+
+   <div class="attendance-toolbar" style="margin:15px 0;">
+    <input
+      type="month"
+    id="parentMonthFilter"
+    class="date-picker">
+</div>
+  </div>
+
+  <div id="parentDashboard"></div>
+
+</section>
+  </main>
+
+  <div id="loadingOverlay" class="loading-overlay hidden" aria-live="polite">
+    <div class="loader-card">
+      <span class="spinner"></span>
+      <strong id="loadingText">Loading...</strong>
     </div>
   </div>
 
-  <script src="js/auth.js"></script>
+  <dialog id="studentModal" class="student-modal">
+    <div id="studentModalBody"></div>
+    <button id="closeModal" class="primary-btn" type="button">Close</button>
+  </dialog>
 
+  <dialog id="credentialModal" class="student-modal">
+    <form id="credentialForm" class="modal-form">
+      <input id="credentialStudentId" type="hidden">
+      <div class="panel-title">
+        <div>
+          <h2>Edit Login</h2>
+          <p>Set a custom username and password for this parent login.</p>
+        </div>
+      </div>
+      <label>
+        Username
+        <input id="credentialUsername" type="text" required>
+      </label>
+      <label>
+        Password
+        <input id="credentialPassword" type="text" required>
+      </label>
+      <div class="modal-actions">
+        <button id="closeCredentialModal" class="ghost-btn" type="button">Cancel</button>
+        <button class="primary-btn" type="submit">Update Login</button>
+      </div>
+    </form>
+  </dialog>
+
+
+  <dialog id="operatorModal" class="modern-modal">
+    <form id="operatorModalForm" class="modal-card">
+
+      <!-- ❌ CLOSE BUTTON -->
+      <button type="button" id="closeOperatorModal" class="modal-close-btn">✕</button>
+
+      <h2>Edit Operator</h2>
+
+      <input type="hidden" id="modalOperatorId">
+
+      <!-- IMAGE PREVIEW -->
+      <div class="image-upload">
+        <img id="modalOperatorPreview" class="avatar large" src="" alt="Preview">
+        <input type="file" id="modalOperatorImage" accept="image/*">
+        <button type="button" id="uploadBtn" class="ghost-btn">Change Photo</button>
+      </div>
+
+      <!-- NAME -->
+      <label>Name</label>
+      <input type="text" id="modalOperatorName" required>
+      <small class="error" id="nameError"></small>
+
+      <!-- PHONE -->
+      <label>Phone</label>
+      <input type="text" id="modalOperatorPhone">
+      <small class="error" id="phoneError"></small>
+
+      <!-- ROLE -->
+      <label>Role</label>
+      <select id="modalOperatorRole">
+        <option value="operator">Operator</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <div class="actions">
+        <button type="submit" class="primary-btn">Save</button>
+        <button type="button" id="closeOperatorModal" class="ghost-btn">Cancel</button>
+      </div>
+
+    </form>
+  </dialog>
+  <div id="toastContainer"></div>
+  <script src="app.js"></script>
 </body>
+
 </html>
